@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n#diagGGmcmc\ndata(codaSamples)\nmcmc=coda::as.mcmc.list(codaSamples)\ntestobj=  diagGGmcmc(codaSamples, filetype='png', dpi=200)\n\n#InformedBetaBF\ntestobj=InformedBetaBF(alpha2=2, beta2=5, n=10, x=4)\n\n#corrcheck\ndata(clerical)\ntestobj=corrcheck(clerical)\n\n#LASSO\ndata(clerical)\ny=clerical[,1]\nx=as.matrix(clerical[,-1])\nxnew=c(5000, 75, 900, 200, 650)\ntestobj=LASSOReg( x, y, xnew, iter=3334, burn=5000, thin=3, alpha=0.05, parallel=TRUE, phi=NULL, DIC=FALSE)\n\n#Ridge\ndata(clerical)\ny=clerical[,1]\nx=as.matrix(clerical[,-1])\nxnew=c(5000, 75, 900, 200, 650)\ntestobj=RidgeReg( x,y,xnew,iter=3334,burn=5000,thin=3,alpha=0.05,parallel=TRUE,phi=0.5,DIC=FALSE)\n\n#SLR\ndata(\"electric\")\ny=electric[,3]\nx=electric[,1]\ntestobj=UninformedSLR(x,\n                      y,\n                      xnew=1700,\n                      iter=3334,\n                      burn=5000,\n                      thin=3,\n                      alpha=0.05,\n                      parallel=TRUE,\n                      DIC=TRUE)\n\n#LinQuadReg\ndata(\"electric\")\ny=electric[,3]\nx=electric[,1]\ntestobj=LinQuadReg(  x,\n             y,\n             xnew=NULL,\n             iter=3334,\n             burn=5000,\n             thin=3,\n             alpha=0.05)\n\n#two.t.test\ndata(reading)\ny1=reading$Grade[reading$Method == 'c']\ny2=reading$Grade[reading$Method == 't']\ntestobj=two.t.test(y1,\n                   y2,\n                   iter=3334,\n                   burn=5000,\n                   thin=3,\n                   alpha=0.05,\n                   parallel=TRUE)\n\n#MLR\ndata(\"iqsize\")\nx=as.matrix(iqsize[,c('Brain','Height','Weight')])\ny=iqsize[,'PIQ']\ntestobj=UninformedMLR(x,\n                      y,\n                      iter=3334,\n                      burn=5000,\n                      thin=3,\n                      alpha=0.05,\n                      parallel=TRUE,\n                      DIC=FALSE)\n\n#GLM\n## Not run: \ndata('leukemia')\ny=leukemia[,1]\nx=as.matrix(leukemia[,-1])\ntestobj=   UninformedGLM( x,\n                          y,\n                          iter=3334,\n                          burn=5000,\n                          thin=3,\n                          alpha=0.05,\n                          parallel=TRUE,\n                          DIC=FALSE)\n",
+    "created" : 1493413354003.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1466121891",
+    "id" : "F97267EE",
+    "lastKnownWriteTime" : 1493416671,
+    "last_content_update" : 1493416671164,
+    "path" : "C:/Users/jeffn/OneDrive/OU/2017 1-Spring/MATH 4803 - Bayesian Statistics/Assignments/Ass4/testproj2.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

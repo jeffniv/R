@@ -1,0 +1,19 @@
+
+  model{
+  for( i in 1 : n1 ) {
+  y1[i] ~ dt(mu1, tau1, nu)
+  }
+  for( j in 1 : n2 ) {
+  y2[j] ~ dt(mu2, tau2, nu)
+  }
+  mu1 ~ dnorm(0.0, 1.0E-6)
+  mu2 ~ dnorm(0.0, 1.0E-6)
+  nuMinus1 ~ dexp(1/29)
+  sigma1 ~ dunif(0, 100)
+  sigma2 ~ dunif(0, 100)
+  muDiff <- mu1 - mu2
+  nu <- nuMinus1 + 1
+  sigDiff <- sigma1 - sigma2
+  tau1 <- pow(sigma1,  -2)
+  tau2 <- pow(sigma2,  -2)
+  }

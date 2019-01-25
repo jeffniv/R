@@ -1,0 +1,28 @@
+Package: MATH4803Nivitanont
+Type: Package
+Title: Bayesian regression and model selection
+Version: 1.3
+Author: Jeff Nivitanont
+Maintainer: Jeff Nivitanont <jeffniv@ou.edu>
+Description: Bayesian inference through MCMC sampling.
+    The functions in this package interface with the JAGS MCMC library.
+License: GPL-2, GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Imports:
+    corrgram,
+    s20x,
+    ggmcmc,
+    ggthemes,
+    gridExtra,
+    rjags,
+    runjags,
+    parallel,
+    coda,
+    rgl,
+    MASS
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

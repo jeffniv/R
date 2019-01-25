@@ -1,0 +1,129 @@
+---
+title: "Introduction to MATH4803Nivitanont"
+author: "Jeff Nivitanont"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to MATH4803Nivitanont}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Welcome! This package is used for Bayesian inference using Monte Carlo Markov Chain (MCMC) sampling to generate a sequence of dependent samples from the posterior distribution of parameters. There are functions in this package that are especially useful for dealing with multicollinearity and model selection. Briefly, this package is useful for:
+
+- Making regression models based on credible Bayesian inference principles
+- Dealing with predictor variables that are highly correlated
+- Choosing between the "best" models according to Bayesian selection methods
+
+
+
+## Bayesian Inference
+
+> "Bayesian Inference is the redistribution of credibility."
+(John Kruschke)
+
+Bayes' Rule provides an expression for the conditional probability of $A$ given $B$, which is equal to
+
+\begin{equation} \label{bayesrule}
+\Pr(A | B) = \frac{\Pr(B | A)\Pr(A)}{\Pr(B)}
+\end{equation}
+
+Following this principle, our methods are based on incorporating prior knowledge into our statistical inference and carrying those beliefs through each "update" of our posterior distribution. Replacing $B$ with observations $\textbf{y}$, $A$ with parameter set $\Theta$, and probabilities $\Pr$ with densities $p$ (or sometimes $\pi$ or function $f$), results in the following
+
+$$
+p(\Theta | \textbf{y}) = \frac{p(\textbf{y} | \Theta)p(\Theta)}{p(\textbf{y})}$$
+
+where $p(\textbf{y})$ will be discussed below, p($\Theta$) is the set of prior distributions of parameter set $\Theta$ before $\textbf{y}$ is observed, $p(\textbf{y} | \Theta)$ is the likelihood of $\textbf{y}$ under a model, and $p(\Theta | \textbf{y})$ is the joint posterior distribution, sometimes called the full posterior distribution, of parameter set $\Theta$ that expresses uncertainty about parameter set $\Theta$ after taking both the prior and data into account. Since there are usually multiple parameters, $\Theta$ represents a set of $j$ parameters
+
+$$\Theta = \theta_1,...,\theta_j$$
+The denominator
+
+$$p(\textbf{y}) = \int p(\textbf{y} | \Theta)p(\Theta) d\Theta$$
+
+defines the marginal likelihood of $\textbf{y}$, or the prior predictive distribution of $\textbf{y}$, and may be set to an unknown constant $\textbf{c}$. The prior predictive distribution indicates what $\textbf{y}$ should look like, given the model, before $\textbf{y}$ has been observed. Only the set of prior probabilities and the model's likelihood function are used for the marginal likelihood of $\textbf{y}$. The presence of the marginal likelihood of $\textbf{y}$ normalizes the joint posterior distribution, $p(\Theta | \textbf{y})$, ensuring it is a proper distribution and integrates to one.
+
+The components of Bayesian inference are:
+
+- $p(\Theta)$ is the set of prior distributions for parameter set $\Theta$, and uses probability as a means of quantifying uncertainty about $\Theta$ before taking the data into account.
+- $p(\textbf{y} | \Theta)$ is the likelihood or likelihood function, in which all variables are related in a full probability model.
+- $p(\Theta | \textbf{y})$ is the joint posterior distribution that expresses uncertainty about parameter set $\Theta$ after taking both the prior and the data into account. If parameter set $\Theta$ is partitioned into a single parameter of interest $\phi$ and the remaining parameters are considered nuisance parameters, then $p(\phi | \textbf{y})$ is the marginal posterior distribution.
+
+## Numerical Methods
+
+MCMC algorithms originated in statistical physics and are now used in Bayesian inference to sample from probability distributions by constructing Markov chains. In Bayesian inference, the target distribution of each Markov chain is usually a marginal posterior distribution, such as each parameter $\theta$. Each Markov chain begins with an initial value and the algorithm iterates, attempting to maximize the logarithm of the unnormalized joint posterior distribution and eventually arriving at each target distribution. Each iteration is considered a state. A Markov chain is a random process with a finite state-space and the Markov property, meaning that the next state depends only on the current state, not on the past. The quality of the marginal samples usually improves with the number of iterations. The most prevalent MCMC algorithms may be the simplest: random-walk Metropolis and Gibbs sampling.
+
+##Model Selection
+
+###Bayes Factor 
+The Bayes Factor for comparing two models may be approximated as the ratio of the marginal likelihood of the data in model 1 and model 2. The Bayes Factor Formally, the Bayes factor in this case is
+
+$$B = \frac{p(\textbf{y}|\mathcal{M}_1)}{p(\textbf{y}|\mathcal{M}_2)} = \frac{\int p(\textbf{y}|\Theta_1,\mathcal{M}_1)p(\Theta_1|\mathcal{M}_1)d\Theta_1}{\int p(\textbf{y}|\Theta_2,\mathcal{M}_2)p(\Theta_2|\mathcal{M}_2)d\Theta_2}$$
+
+where $p(\textbf{y}|\mathcal{M}_1)$ is the marginal likelihood of the data in model 1. A ratio greater than 1 generally means that the first model is favored over the second model.
+
+Example
+```{r, eval=FALSE,collapse=TRUE}
+InformedBetaBF(alpha2=2, beta2=5, n=10, x=4)
+```
+
+```{r, echo=FALSE,collapse=TRUE, fig.width=8,fig.height=8}
+library(MATH4803Nivitanont)
+InformedBetaBF2(alpha2=2, beta2=5, n=10, x=4)
+```
+
+###Deviance Information Criterion
+Deviance Information Criterion (DIC) is the expected value of the deviance, Dbar, plus the penalty term.
+
+$$\mathrm{DIC} = \bar{D} + \mathrm{pD}$$
+
+Deviance is defined as -2 times the log-likelihood.
+
+$$D(\textbf{y},\Theta) = -2\log[p(\textbf{y} | \Theta)]$$
+The penalty term, pD, is the "effective number of parameters" calculated as
+
+$$\mathrm{pD} = \bar{D} - D(\bar{\theta})$$
+
+DIC may be compared across different models and even different methods, as long as the dependent variable does not change between models, making DIC the most flexible model fit statistic. DIC is a hierarchical modeling generalization of the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC). Like AIC and BIC, it is an asymptotic approximation as the sample size becomes large. DIC is valid only when the joint posterior distribution is approximately multivariate normal. Models should be preferred with smaller DIC. Since DIC increases with model complexity (pD), simpler models are preferred. The majority of the functions in this package have the option `DIC=TRUE` to monitor DIC during the MCMC sampling process.
+
+
+##Creating a Regression Model
+
+In this package, we have included functions that perform simple linear regression, multiple linear regression, quadratic regression, LASSO regression, and Ridge regression. There is also an option to supply new data to predict a new response value. 
+
+In the example below, our data has high multicollinearity, which we see using the `corrcheck` function.
+
+```{r, eval=FALSE}
+data(clerical)
+corrcheck(clerical)
+```
+
+```{r, echo=FALSE, fig.width=8,fig.height=8, fig.show='hold'}
+library(MATH4803Nivitanont)
+data(clerical)
+corrcheck1(clerical)
+corrcheck2(clerical)
+```
+
+Running the `RidgeReg` function is appropriate for this data set and gives us the following model
+
+```{r,eval=FALSE, fig.show='hold'}
+y=clerical[,1]
+x=as.matrix(clerical[,-1])
+xnew=c(5000, 75, 900, 200, 650)
+testobj=RidgeReg(x,y,xnew, DIC=TRUE)
+
+```
+
+```{r, echo=FALSE, fig.show='hold', collapse=TRUE, fig.width=8,fig.height=8}
+library(MATH4803Nivitanont)
+data(codaSamples)
+mcmc=coda::as.mcmc.list(codaSamples)
+diag1(mcmc)
+
+```
+```{r, echo=FALSE, fig.show='hold', collapse=TRUE, fig.width=8,fig.height=8}
+library(MATH4803Nivitanont)
+data(codaSamples)
+mcmc=coda::as.mcmc.list(codaSamples)
+diag2(mcmc)
+ ```

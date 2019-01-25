@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\nlibrary(s20x)\nlibrary(MATH4803Nivitanont)\ndf1=read.csv(file=file.choose(), header = TRUE) \ncolnames(df1)=c('Year','CO2','CH4','TempAnom')\nrownames(df1)=df1$Year\ndf1=df1[-1]\ncorrcheck(df1)\nlm1=lm('TempAnom ~ CO2', data=df1)\nlm2=lm('TempAnom ~ CH4', data=df1)\nlm3=lm('TempAnom ~.', data=df1)\nsummary(lm1)\nsummary(lm2)\nsummary(lm3)\nstep(lm3)\nanova(lm1,lm2,lm3)\ndev.new(noRStudioGD = TRUE)\nlayout(matrix(1:4, nr=2,nc=2))\nplot(lm2)\n\nbm1=UninformedSLR(x=df1$CH4,y=df1$TempAnom)\ngraphics.off()\n",
+    "created" : 1494615137957.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3702295057",
+    "id" : "8D453074",
+    "lastKnownWriteTime" : 1494616882,
+    "last_content_update" : 1494616882166,
+    "path" : "C:/Users/Jeff/Desktop/help esther/CO2CH4.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
